@@ -18,6 +18,20 @@ This lib provides methods to build maas clients with defaults required parameter
     * [Default usage:](#default-usage-1)
 <!-- TOC -->
 
+
+To use any client it's necessary to register security implemention - dummy or your own, the followning example shows registration of required services:
+
+```go
+import (
+	"github.com/netcracker/qubership-core-lib-go/v3/serviceloader"
+	"github.com/netcracker/qubership-core-lib-go/v3/security"
+)
+
+func init() {
+  serviceloader.Register(2, &security.DummyToken{})
+}
+```
+
 ## Kafka
 
 ### Default usage:
@@ -25,9 +39,15 @@ This lib provides methods to build maas clients with defaults required parameter
 import (
 	"context"
 	"fmt"
+	"github.com/netcracker/qubership-core-lib-go/v3/serviceloader"
+	"github.com/netcracker/qubership-core-lib-go/v3/security"
 	"github.com/netcracker/qubership-core-lib-go-maas-client/v3/classifier"
 	maas "github.com/netcracker/qubership-core-lib-go-maas-core/v3"
 )
+
+func init() {
+  serviceloader.Register(2, &security.DummyToken{})
+}
 
 func kafkaClientWithDefaults(ctx context.Context) error {
 	maasKafkaClient := maas.NewKafkaClient()
@@ -43,6 +63,8 @@ func kafkaClientWithDefaults(ctx context.Context) error {
 ### Override default parameters
 ~~~ go 
 import (
+	"github.com/netcracker/qubership-core-lib-go/v3/serviceloader"
+	"github.com/netcracker/qubership-core-lib-go/v3/security"
 	"github.com/netcracker/qubership-core-lib-go-maas-client/v3/logging"
 	maas "github.com/netcracker/qubership-core-lib-go-maas-core/v3"
 )
@@ -50,6 +72,10 @@ import (
 var myNamespace string
 var myMaaSAgentUrl string
 var myAuthSupplier func(ctx context.Context) (string, error)
+
+func init() {
+  serviceloader.Register(2, &security.DummyToken{})
+}
 
 func kafkaClientWithCustomParams() {
     maasKafkaClient := maas.NewKafkaClient(
@@ -69,9 +95,15 @@ See example [tenant-topics-watch.go](examples/tenant-topics-watch.go)
 import (
 	"context"
 	"fmt"
+	"github.com/netcracker/qubership-core-lib-go/v3/serviceloader"
+	"github.com/netcracker/qubership-core-lib-go/v3/security"
 	"github.com/netcracker/qubership-core-lib-go-maas-client/v3/classifier"
 	maas "github.com/netcracker/qubership-core-lib-go-maas-core/v3"
 )
+
+func init() {
+  serviceloader.Register(2, &security.DummyToken{})
+}
 
 func kafkaClientWithDefaults(ctx context.Context) error {
 	maasRabbitClient := maas.NewRabbitClient()

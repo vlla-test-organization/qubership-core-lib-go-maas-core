@@ -12,6 +12,7 @@ import (
 	"github.com/netcracker/qubership-core-lib-go/v3/utils"
 	"github.com/netcracker/qubership-core-lib-go/v3/const"
 	"github.com/netcracker/qubership-core-lib-go/v3/serviceloader"
+	"github.com/netcracker/qubership-core-lib-go/v3/security"
 )
 
 type options struct {
@@ -24,10 +25,6 @@ type options struct {
 }
 
 type Option func(options *options)
-
-func init() {
-	serviceloader.Register(2, &serviceloader.Token{})
-}
 
 func NewKafkaClient(opts ...Option) kafka.MaasClient {
 	config := configure(opts...)
@@ -93,7 +90,7 @@ func getNamespace() string {
 
 func getHttpClient() *resty.Client {
 	return resty.New().OnBeforeRequest(func(client *resty.Client, request *resty.Request) error {
-	    tokenProvider := serviceloader.MustLoad[serviceloader.TokenProvider]()
+	    tokenProvider := serviceloader.MustLoad[security.TokenProvider]()
 		token, err := tokenProvider.GetToken(request.Context())
 		if err != nil {
 			return fmt.Errorf("failed to get token: %w", err)
@@ -108,6 +105,6 @@ func getStompDialer() *websocket.Dialer {
 }
 
 func getAuthSupplier() func(ctx context.Context) (string, error) {
-    tokenProvider := serviceloader.MustLoad[serviceloader.TokenProvider]()
+    tokenProvider := serviceloader.MustLoad[security.TokenProvider]()
 	return tokenProvider.GetToken
 }
