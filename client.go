@@ -4,15 +4,15 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/netcracker/qubership-core-lib-go-maas-client/v3/kafka"
-	"github.com/netcracker/qubership-core-lib-go-maas-client/v3/rabbit"
 	"github.com/go-resty/resty/v2"
 	"github.com/gorilla/websocket"
-	"github.com/netcracker/qubership-core-lib-go/v3/configloader"
-	"github.com/netcracker/qubership-core-lib-go/v3/utils"
-	"github.com/netcracker/qubership-core-lib-go/v3/const"
-	"github.com/netcracker/qubership-core-lib-go/v3/serviceloader"
-	"github.com/netcracker/qubership-core-lib-go/v3/security"
+	"github.com/vlla-test-organization/qubership-core-lib-go-maas-client/v3/kafka"
+	"github.com/vlla-test-organization/qubership-core-lib-go-maas-client/v3/rabbit"
+	"github.com/vlla-test-organization/qubership-core-lib-go/v3/configloader"
+	"github.com/vlla-test-organization/qubership-core-lib-go/v3/const"
+	"github.com/vlla-test-organization/qubership-core-lib-go/v3/security"
+	"github.com/vlla-test-organization/qubership-core-lib-go/v3/serviceloader"
+	"github.com/vlla-test-organization/qubership-core-lib-go/v3/utils"
 )
 
 type options struct {
@@ -90,7 +90,7 @@ func getNamespace() string {
 
 func getHttpClient() *resty.Client {
 	return resty.New().OnBeforeRequest(func(client *resty.Client, request *resty.Request) error {
-	    tokenProvider := serviceloader.MustLoad[security.TokenProvider]()
+		tokenProvider := serviceloader.MustLoad[security.TokenProvider]()
 		token, err := tokenProvider.GetToken(request.Context())
 		if err != nil {
 			return fmt.Errorf("failed to get token: %w", err)
@@ -105,6 +105,6 @@ func getStompDialer() *websocket.Dialer {
 }
 
 func getAuthSupplier() func(ctx context.Context) (string, error) {
-    tokenProvider := serviceloader.MustLoad[security.TokenProvider]()
+	tokenProvider := serviceloader.MustLoad[security.TokenProvider]()
 	return tokenProvider.GetToken
 }
